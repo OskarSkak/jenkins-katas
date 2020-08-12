@@ -22,7 +22,7 @@ pipeline {
 
           }
           steps {
-            stash(includes: '.git')
+            stash(name: 'codeinc', includes: '.git')
             sh 'ci/build-app.sh'
             archiveArtifacts 'app/build/libs/'
             sh 'ls'
