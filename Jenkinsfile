@@ -6,6 +6,7 @@ pipeline {
         stash(name: 'code', excludes: '.git')
       }
     }
+
     stage('Build') {
       parallel {
         stage('Parallel execution') {
@@ -28,7 +29,7 @@ pipeline {
             sh 'ls'
             deleteDir()
             sh 'ls'
-            skipDefaultCheckout(true)
+            skipDefaultCheckout true
           }
         }
 
@@ -49,5 +50,8 @@ pipeline {
       }
     }
 
+  }
+  environment {
+    docker_username = 'oskardock'
   }
 }
