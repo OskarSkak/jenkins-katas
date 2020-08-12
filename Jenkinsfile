@@ -22,13 +22,21 @@ pipeline {
 
           }
           steps {
-            stash(name: 'codeinc', includes: '.git')
+            unstash 'code'
             sh 'ci/build-app.sh'
             archiveArtifacts 'app/build/libs/'
             sh 'ls'
             deleteDir()
             sh 'ls'
             skipDefaultCheckout(true)
+          }
+        }
+
+        stage('Test app') {
+          steps {
+            unstash 'code'
+            sh 'ci/unit-test-app.sh'
+            junit 'app/build/test-results/test/TEST-*.xml'
           }
         }
 
