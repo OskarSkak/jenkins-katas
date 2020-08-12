@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  environment{
+    docker_username = 'oskardock'
+  }
   stages {
     stage('clone down') {
       steps {
@@ -49,15 +52,16 @@ pipeline {
 
       }
     }
-
-  }
-  environment {
-    docker_username = 'oskardock'
-  }
-  steps{
-    unstash 'code'
-    sh 'ci/build-docker.sh'
-    sh 'echo "$DOCKERCREDS_PSW" | docker login -u "$DOCKERCREDS_USR" --password-stdin' //login to docker hub with the credentials above
-    sh 'ci/push-docker.sh'
+    stage('Push docker app'){
+      environment {
+        DOCKERCREDS = credentials('docker_login') //use the credentials just created in this stage
+      }
+      steps{
+        unstash 'code'
+        sh 'ci/build-docker.sh'
+        sh 'echo "$DOCKERCREDS_PSW" | docker login -u "$DOCKERCREDS_USR" --password-stdin' //login to docker hub with the credentials above
+        sh 'ci/push-docker.sh'
+      }
+    }
   }
 }
