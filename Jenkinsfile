@@ -75,6 +75,7 @@ pipeline {
       steps {
         unstash 'build'
         sh 'ci/component-test.sh'
+        sh 'echo "Test af pull request"'
       }
     }
   }
